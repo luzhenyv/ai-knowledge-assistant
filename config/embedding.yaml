@@ -1,0 +1,5 @@
+# Local, free embeddings so re-indexing costs nothing and works offline.
+# Swap provider to "fake" for deterministic offline tests (see container).
+provider: sentence-transformers
+model: sentence-transformers/all-MiniLM-L6-v2
+fake_dim: 512   # wide enough to keep hash collisions (and false matches) low

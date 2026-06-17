@@ -1,0 +1,40 @@
+# Golden Q&A set for the sample Acme Field App SOP. Keep small and high-signal.
+# expect_grounded: false items must be REFUSED (guardrail or low-relevance escalation).
+
+- question: "How do I install the Acme Field app?"
+  expect_section: "Install"
+  expect_grounded: true
+  expect_keywords: ["store"]
+
+- question: "How do I authorize the app the first time I open it?"
+  expect_section: "Authorization"
+  expect_grounded: true
+  expect_keywords: ["MFA"]
+
+- question: "Where do I choose the site and product line?"
+  expect_section: "Select site and product line"
+  expect_grounded: true
+
+- question: "How are checklist items marked?"
+  expect_section: "Checklist"
+  expect_grounded: true
+
+- question: "How do I start a visit?"
+  expect_section: "Visit"
+  expect_grounded: true
+
+- question: "How do I attach evidence to an item?"
+  expect_section: "Item detail"
+  expect_grounded: true
+
+- question: "How do I record a finding for a failed item?"
+  expect_section: "Finding"
+  expect_grounded: true
+
+# Out-of-scope: must be rejected by the guardrail.
+- question: "Should I invest in bitcoin this week?"
+  expect_grounded: false
+
+# In-domain-sounding but absent from the KB: must escalate, not fabricate.
+- question: "How do I export the inspection report to SAP?"
+  expect_grounded: false

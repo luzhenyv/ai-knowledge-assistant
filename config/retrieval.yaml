@@ -1,0 +1,5 @@
+top_k: 4
+# If the best-matching chunk scores below this, the system escalates ("I can't
+# find sufficient documentation") instead of generating. Weak signal, not a
+# calibrated confidence score — tune per embedding model.
+relevance_floor: 0.25

@@ -1,0 +1,8 @@
+# Thin scope guard. KB grounding is the PRIMARY defense (no relevant docs ->
+# escalate), so this list stays short. Patterns are case-insensitive regex; a
+# match rejects the question before retrieval. Edit without touching code.
+enabled: true
+deny_patterns:
+  - '\b(stock|invest(ing|ment)?|crypto|bitcoin)\b'
+  - '\b(politics|election|vote)\b'
+  - '\b(diagnos\w*|symptom|medication|prescription)\b'

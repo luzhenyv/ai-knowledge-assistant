@@ -1,0 +1,5 @@
+# Generation provider. Set provider: fake to run the whole pipeline offline.
+provider: anthropic
+model: claude-sonnet-4-6   # configurable to claude-opus-4-8 for higher quality
+max_tokens: 1024
+temperature: 0.0          # deterministic, grounded answers

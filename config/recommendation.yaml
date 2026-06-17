@@ -1,0 +1,25 @@
+# Static topic graph: when an answer is grounded in a section, suggest related
+# next topics. Keys are matched against retrieved section paths (case-insensitive
+# substring). Replace with analytics-derived edges later — the interface is stable.
+topics:
+  install:
+    - "Authorization: sign in for the first time"
+    - "Select site and product line"
+  authorization:
+    - "Select site and product line"
+    - "Install the app"
+  select site:
+    - "Fill in the Checklist"
+    - "Start a Visit"
+  checklist:
+    - "Start a Visit"
+    - "Item detail"
+  visit:
+    - "Item detail"
+    - "Record a Finding"
+  item detail:
+    - "Record a Finding"
+    - "Fill in the Checklist"
+  finding:
+    - "Start a Visit"
+    - "Item detail"

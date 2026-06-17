@@ -1,0 +1,4 @@
+# Filesystem layout. Relative paths resolve against the project root.
+docs_dir: docs
+index_dir: var/index
+events_path: var/events.jsonl
