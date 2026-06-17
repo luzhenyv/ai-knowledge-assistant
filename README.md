@@ -49,6 +49,28 @@ export ANTHROPIC_API_KEY=sk-...   # for real generation
 To run fully offline (no key, no model download) set `provider: fake` in
 `config/embedding.yaml` and `config/llm.yaml`.
 
+## Preprocess source documents (`.pdf` / `.pages` → markdown)
+
+`aka build` ingests markdown. To turn raw SOPs into that markdown, use the optional
+preprocessing pipeline (a per-material YAML profile is the only knob you tune):
+
+```bash
+uv sync --extra prep                      # pymupdf4llm + pillow (kept out of the core)
+cp profiles/sample.yaml profiles/my-doc.yaml   # edit slug/title/structurer/headings/images
+uv run aka prep path/to/MyDoc.pdf --profile profiles/my-doc.yaml
+uv run aka prep-batch "inbox/*.pdf" --profile profiles/my-doc.yaml
+```
+
+This writes `docs/<slug>/sop.md` + `images/` (then run `aka build`). Notes:
+- **`.pages`** is converted to PDF via **Apple Pages + AppleScript** — run on a Mac
+  with Pages installed (or convert to PDF yourself, or use LibreOffice headless).
+- **`structurer: deterministic`** (default) is free/offline; **`vision-llm`** has
+  Claude read each page image and emit clean, figure-anchored markdown (set
+  `ANTHROPIC_API_KEY`, best for screenshot-heavy SOPs).
+- Markdown is the reviewable, hand-editable intermediate. Raw sources, profiles for
+  internal material, and `var/prep/` intermediates are gitignored — nothing internal
+  reaches the repo.
+
 ## Usage
 
 ```bash

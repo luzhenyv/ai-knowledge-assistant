@@ -1,0 +1,26 @@
+# Per-material preprocessing profile — the single fine-tune knob.
+# Copy this per document (or family) and run: aka prep <file> --profile profiles/<slug>.yaml
+# Real profiles for internal material are gitignored; only this sample is shared.
+
+slug: sample-field-app          # output goes to docs/<slug>/
+title: "Acme Field App SOP"     # optional; inferred from headings/filename if omitted
+source_type: auto               # auto | pdf | pages
+extractor: pymupdf4llm
+structurer: deterministic       # deterministic (free/offline) | vision-llm (Claude reads pages)
+pages: all                      # "all" or a range like "2-14"
+
+images:
+  min_width: 80                 # drop icons / bullets / rule lines below this
+  min_height: 80
+  keep_formats: [png, jpeg, jpg]
+
+# Coerce numbered SOP headings the extractor missed into real markdown levels.
+headings:
+  - { pattern: '^\d+\.?\s+\S',   level: 2 }   # "1. Install"  -> ##
+  - { pattern: '^\d+\.\d+\s+\S', level: 3 }   # "1.2 Sign in" -> ###
+
+# Used only when structurer: vision-llm
+llm:
+  model: claude-sonnet-4-6
+  dpi: 150
+  prompt_profile: sop

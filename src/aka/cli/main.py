@@ -154,5 +154,66 @@ def eval(root: str = typer.Option(".", help="Project root.")) -> None:
     raise typer.Exit(code=0 if report.passed else 1)
 
 
+@app.command()
+def prep(
+    source: str = typer.Argument(..., help="Source document (.pdf or .pages)."),
+    profile: str = typer.Option(..., "--profile", help="Path to the material's profile YAML."),
+    root: str = typer.Option(".", help="Project root (docs/ and var/ live here)."),
+) -> None:
+    """Convert one source document into docs/<slug>/sop.md + images/."""
+    from aka.preprocess.pipeline import run_prep
+    from aka.preprocess.profile import load_profile
+
+    prof = load_profile(profile)
+    llm = _prep_llm(prof)
+    report = run_prep(
+        source=source,
+        profile=prof,
+        out_root=Path(root) / "docs",
+        workdir_root=Path(root) / "var" / "prep",
+        timestamp=_now(),
+        llm=llm,
+    )
+    typer.echo(report.render())
+    typer.echo("Next: `aka build` to index, then `aka validate`.")
+
+
+@app.command(name="prep-batch")
+def prep_batch(
+    sources: list[str] = typer.Argument(..., help="Source files or globs."),
+    profile: str = typer.Option(..., "--profile", help="Profile YAML applied to all."),
+    root: str = typer.Option(".", help="Project root."),
+) -> None:
+    """Convert many source documents with one profile (slug derives from filename)."""
+    from glob import glob
+
+    from aka.preprocess.pipeline import run_prep
+    from aka.preprocess.profile import load_profile
+
+    base = load_profile(profile)
+    llm = _prep_llm(base)
+    paths = [Path(p) for pattern in sources for p in glob(pattern)] or [Path(s) for s in sources]
+    for path in paths:
+        prof = base.model_copy(update={"slug": path.stem.lower().replace(" ", "-")})
+        report = run_prep(
+            source=path,
+            profile=prof,
+            out_root=Path(root) / "docs",
+            workdir_root=Path(root) / "var" / "prep",
+            timestamp=_now(),
+            llm=llm,
+        )
+        typer.echo(report.render())
+
+
+def _prep_llm(profile):
+    """Build the Anthropic client only when the profile needs vision; else None."""
+    if profile.structurer != "vision-llm":
+        return None
+    from aka.llm.anthropic_llm import AnthropicLLM
+
+    return AnthropicLLM(model=profile.llm.model, max_tokens=4096)
+
+
 if __name__ == "__main__":
     app()

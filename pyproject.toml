@@ -21,6 +21,9 @@ aka = "aka.cli.main:app"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
+# Document preprocessing (aka prep). Kept out of the core so the RAG stays light.
+# Vision structuring reuses the core `anthropic` dependency.
+prep = ["pymupdf4llm>=0.0.17", "pillow>=10"]
 
 [build-system]
 requires = ["hatchling"]
