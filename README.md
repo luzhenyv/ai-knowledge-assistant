@@ -71,6 +71,20 @@ This writes `docs/<slug>/sop.md` + `images/` (then run `aka build`). Notes:
   internal material, and `var/prep/` intermediates are gitignored — nothing internal
   reaches the repo.
 
+### Agent skill
+
+Driving this from an agent (Claude Code, opencode, …)? A portable skill at
+`.claude/skills/document-preprocessing/` is the agent-facing playbook for the same job:
+classify a source, normalize broader formats to PDF (`.docx`/`.pptx`/images via
+`scripts/normalize_to_pdf.py`), tune a profile, run `aka prep` (or hand-author when the
+CLI can't), and verify the output against the ingestion contract:
+
+```bash
+python .claude/skills/document-preprocessing/scripts/check_contract.py docs/<slug>
+```
+
+The skill is plain markdown + two stdlib/Pillow scripts — no Claude-Code-only features.
+
 ## Usage
 
 ```bash
